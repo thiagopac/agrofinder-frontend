@@ -1,0 +1,115 @@
+<div class="p-container">
+  <div class="row">
+    <div class="col-12">
+      <p-toolbar>
+        <div class="p-toolbar-group-left">
+          <!-- <p-multiSelect
+            [options]="colunas"
+            [(ngModel)]="colunasSelecionadas"
+            defaultLabel="Selecione as colunas"
+            optionLabel="nome"
+            [showToggleAll]="true"
+          >
+          </p-multiSelect> -->
+        </div>
+
+        <div class="p-toolbar-group-right gap-3">
+          <input type="text" placeholder="NIRF" pInputText [(ngModel)]="nirf" />
+
+          <input
+            type="text"
+            placeholder="Cód. imóvel rural (INCRA)"
+            pInputText
+            [(ngModel)]="codigoincra"
+          />
+          <input
+            type="text"
+            placeholder="Nome do Imóvel Rural"
+            pInputText
+            [(ngModel)]="nomeimovelrural"
+          />
+
+          <input
+            type="text"
+            placeholder="Município"
+            pInputText
+            [(ngModel)]="municipio"
+          />
+
+          <p-dropdown
+            [options]="ufs"
+            [(ngModel)]="selectedUf"
+            optionLabel="value"
+            optionValue="sigla"
+          ></p-dropdown>
+
+          <p-button
+            icon="pi pi-search "
+            (onClick)="filtrarImoveis()"
+          ></p-button>
+          <p-button
+            icon="pi pi-times"
+            [style]="{ 'background-color': 'red', border: 'none' }"
+            (onClick)="clear()"
+          ></p-button>
+        </div>
+      </p-toolbar>
+
+      <div class="card">
+        <div class="card-body">
+          <p-table
+            [value]="imoveis!"
+            [lazy]="true"
+            (onLazyLoad)="loadImoveis($event)"
+            [paginator]="true"
+            [rows]="10"
+            [totalRecords]="totalRecords!"
+            [loading]="loading"
+            [paginator]="true"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="`Mostrando de {first} até {last} de {totalRecords} registros`"
+            dataKey="id"
+            [rowHover]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>NIRF</th>
+                <th>Área (ha)</th>
+                <th>Cód. imóvel rural (INCRA)</th>
+                <th>Sit. do Imóvel</th>
+                <th>Distrito</th>
+                <th>Nome do Imóvel</th>
+                <th>Endereço</th>
+                <th>Município</th>
+                <th>UF</th>
+                <th>CEP</th>
+                <th>Imune/Isento</th>
+                <th>Cód. SNCR</th>
+                <th>Dt. da Inscrição</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-imovel>
+              <tr>
+                <td>{{ imovel.nirf }}</td>
+                <td>{{ imovel.areatotal / 10 }}</td>
+                <td>{{ imovel.codigoincra }}</td>
+                <td>{{ getSituacaoImovel(imovel.situacaoimovel) }}</td>
+                <td>{{ imovel.distrito }}</td>
+                <td>{{ imovel.nomeimovelrural }}</td>
+                <td>{{ imovel.endereco }}</td>
+                <td>{{ imovel.municipio }}</td>
+                <td>{{ imovel.uf }}</td>
+                <td>
+                  {{ imovel.cep | mask : "00000-000" }}
+                </td>
+                <td>{{ getIsentoImune(imovel.codigoimune) }}</td>
+                <td>{{ getDescricaoSncr(imovel.sncr) }}</td>
+                <td>{{ imovel.datainscricao | date : "dd/MM/yyyy" }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
