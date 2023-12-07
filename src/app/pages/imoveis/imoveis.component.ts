@@ -134,10 +134,18 @@ export class ImoveisComponent implements OnInit {
         page,
         size
       )
-      .subscribe((response) => {
-        this.imoveis = response.data;
-        this.totalRecords = response.meta.total;
-        this.loading = false;
+      .subscribe({
+        next: (response) => {
+          this.imoveis = response.data;
+          this.totalRecords = response.meta.total;
+        },
+        error: (error) => {
+          alert(error.error.message);
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        },
       });
   }
 
