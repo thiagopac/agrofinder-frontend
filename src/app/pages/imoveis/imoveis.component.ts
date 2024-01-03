@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT, ViewportScroller } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TableLazyLoadEvent } from 'primeng/table';
+import { Observable, fromEvent, map } from 'rxjs';
 import { Imovel } from 'src/app/models/interfaces';
 import { ImovelService } from 'src/app/services/imovel.service';
 
@@ -88,18 +90,18 @@ export class ImoveisComponent implements OnInit {
 
   colunas: any[] = [
     { nome: 'NIRF', campo: 'nirf' },
-    { nome: 'Área (ha)', campo: 'areaTotal' },
-    { nome: 'Cód. imóvel rural (INCRA)', campo: 'codigoIncra' },
-    { nome: 'Sit. do Imóvel', campo: 'situacaoImovel' },
+    { nome: 'Área (ha)', campo: 'areatotal' },
+    { nome: 'Cód. imóvel rural (INCRA)', campo: 'codigoincra' },
+    { nome: 'Sit. do Imóvel', campo: 'situacaoimovel' },
     { nome: 'Distrito', campo: 'distrito' },
-    { nome: 'Nome do Imóvel', campo: 'nomeImovelRural' },
+    { nome: 'Nome do Imóvel', campo: 'nomeimovelrural' },
     { nome: 'Endereço', campo: 'endereco' },
     { nome: 'Município', campo: 'municipio' },
     { nome: 'UF', campo: 'uf' },
     { nome: 'CEP', campo: 'cep' },
-    { nome: 'Imune/Isento', campo: 'isentoImune' },
-    { nome: 'Cód. SNCR', campo: 'codigoSncr' },
-    { nome: 'Dt. da Inscrição', campo: 'dataInscricao' },
+    { nome: 'Imune/Isento', campo: 'isentoimune' },
+    { nome: 'Cód. SNCR', campo: 'codigosncr' },
+    { nome: 'Dt. da Inscrição', campo: 'datainscricao' },
   ];
 
   colunasSelecionadas: string[] = this.colunas.map((c) => c.campo);
@@ -107,22 +109,43 @@ export class ImoveisComponent implements OnInit {
   areaminima: number | undefined;
   areamaxima: number | undefined;
 
+  private _selectedColuna: string = 'areatotal';
+  private _selectedDirecao: string = 'asc';
+
+  rows: number = 30;
+
+  direcoes = [
+    { label: 'Crescente', value: 'asc' },
+    { label: 'Decrescente', value: 'desc' },
+  ];
+
   constructor(
     private imovelService: ImovelService,
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private viewportScroller: ViewportScroller,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit() {
     this.loading = true;
     this.primengConfig.ripple = true;
-    this.loadImoveis({ first: 0, rows: 10 });
+    this.loadImoveis({ first: 0, rows: 30 });
+  }
+
+  readonly showScroll$: Observable<boolean> = fromEvent(
+    this.document,
+    'scroll'
+  ).pipe(map(() => this.viewportScroller.getScrollPosition()?.[1] > 0));
+
+  onScrollToTop(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
   }
 
   loadImoveis(event: TableLazyLoadEvent) {
     this.filtrarImoveis(event.first, event.rows!);
   }
 
-  filtrarImoveis(first: number = 0, rows: number = 10) {
+  filtrarImoveis(first: number = 0, rows: number = 30) {
     this.loading = true;
     const page = first / rows + 1;
     const size = rows;
@@ -136,6 +159,8 @@ export class ImoveisComponent implements OnInit {
         this.nomeimovelrural,
         this.areaminima,
         this.areamaxima,
+        this.selectedColuna,
+        this.selectedDirecao,
         page,
         size
       )
@@ -152,6 +177,8 @@ export class ImoveisComponent implements OnInit {
           this.loading = false;
         },
       });
+
+    this.onScrollToTop();
   }
 
   getSituacaoImovel(codigo: number): string {
@@ -174,6 +201,35 @@ export class ImoveisComponent implements OnInit {
     this.nomeimovelrural = '';
     this.areaminima = undefined;
     this.areamaxima = undefined;
+
+    this;
+    this.filtrarImoveis();
+  }
+
+  get selectedColuna(): string {
+    return this._selectedColuna;
+  }
+
+  set selectedColuna(value: string) {
+    if (value !== this._selectedColuna) {
+      this._selectedColuna = value;
+      this.onSortChange();
+    }
+  }
+
+  get selectedDirecao(): string {
+    return this._selectedDirecao;
+  }
+
+  set selectedDirecao(value: string) {
+    if (value !== this._selectedDirecao) {
+      this._selectedDirecao = value;
+      this.onSortChange();
+    }
+  }
+
+  onSortChange(): void {
+    console.log('Ordenação alterada');
     this.filtrarImoveis();
   }
 }

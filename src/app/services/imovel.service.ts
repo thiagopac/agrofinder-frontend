@@ -22,8 +22,10 @@ export class ImovelService {
     nomeimovelrural?: string,
     areaminima?: number,
     areamaxima?: number,
+    colunaOrdenacao?: string,
+    direcaoOrdenacao?: string,
     page: number = 1,
-    size: number = 10
+    size: number = 30
   ): Observable<RespostaPaginada> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -50,6 +52,14 @@ export class ImovelService {
     }
     if (areamaxima !== undefined) {
       params = params.set('areamaxima', areamaxima.toString());
+    }
+
+    if (colunaOrdenacao) {
+      params = params.set('colunaOrdenacao', colunaOrdenacao);
+    }
+
+    if (direcaoOrdenacao) {
+      params = params.set('direcaoOrdenacao', direcaoOrdenacao);
     }
 
     return this.http.get<RespostaPaginada>(

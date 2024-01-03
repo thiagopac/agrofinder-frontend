@@ -16,10 +16,10 @@
         <div class="p-toolbar-group-right gap-3">
           <input type="text" placeholder="NIRF" pInputText [(ngModel)]="nirf" />
 
-          <div class="p-inputgroup">
+          <div class="p-inputgroup" style="width: 220px">
             <input
               type="number"
-              placeholder="Área mínima (ha)"
+              placeholder="Área min (ha)"
               pInputText
               [(ngModel)]="areaminima"
             />
@@ -77,7 +77,7 @@
             [lazy]="true"
             (onLazyLoad)="loadImoveis($event)"
             [paginator]="true"
-            [rows]="10"
+            [(rows)]="rows"
             [totalRecords]="totalRecords!"
             [loading]="loading"
             [paginator]="true"
@@ -121,6 +121,21 @@
                 <td>{{ getDescricaoSncr(imovel.sncr) }}</td>
                 <td>{{ imovel.datainscricao | date : "dd/MM/yyyy" }}</td>
               </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+              <p-dropdown
+                [options]="colunas"
+                [(ngModel)]="selectedColuna"
+                optionLabel="nome"
+                optionValue="campo"
+                placeholder="Ordenar por"
+              ></p-dropdown>
+
+              <p-dropdown
+                [options]="direcoes"
+                [(ngModel)]="selectedDirecao"
+                placeholder="Direção"
+              ></p-dropdown>
             </ng-template>
           </p-table>
         </div>
