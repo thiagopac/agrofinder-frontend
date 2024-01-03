@@ -104,6 +104,9 @@ export class ImoveisComponent implements OnInit {
 
   colunasSelecionadas: string[] = this.colunas.map((c) => c.campo);
 
+  areaminima: number | undefined;
+  areamaxima: number | undefined;
+
   constructor(
     private imovelService: ImovelService,
     private primengConfig: PrimeNGConfig
@@ -131,6 +134,8 @@ export class ImoveisComponent implements OnInit {
         this.nirf,
         this.codigoincra,
         this.nomeimovelrural,
+        this.areaminima,
+        this.areamaxima,
         page,
         size
       )
@@ -167,6 +172,8 @@ export class ImoveisComponent implements OnInit {
     this.municipio = '';
     this.codigoincra = '';
     this.nomeimovelrural = '';
+    this.areaminima = undefined;
+    this.areamaxima = undefined;
     this.filtrarImoveis();
   }
 }

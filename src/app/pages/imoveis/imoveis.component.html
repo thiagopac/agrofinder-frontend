@@ -16,6 +16,21 @@
         <div class="p-toolbar-group-right gap-3">
           <input type="text" placeholder="NIRF" pInputText [(ngModel)]="nirf" />
 
+          <div class="p-inputgroup">
+            <input
+              type="number"
+              placeholder="Área mínima (ha)"
+              pInputText
+              [(ngModel)]="areaminima"
+            />
+            <input
+              type="number"
+              placeholder="Área máxima (ha)"
+              pInputText
+              [(ngModel)]="areamaxima"
+            />
+          </div>
+
           <input
             type="text"
             placeholder="Cód. imóvel rural (INCRA)"

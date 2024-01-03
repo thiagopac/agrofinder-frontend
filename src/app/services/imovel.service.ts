@@ -20,6 +20,8 @@ export class ImovelService {
     nirf?: string,
     codigoincra?: string,
     nomeimovelrural?: string,
+    areaminima?: number,
+    areamaxima?: number,
     page: number = 1,
     size: number = 10
   ): Observable<RespostaPaginada> {
@@ -41,6 +43,13 @@ export class ImovelService {
     }
     if (nomeimovelrural) {
       params = params.set('nomeimovelrural', nomeimovelrural);
+    }
+
+    if (areaminima !== undefined) {
+      params = params.set('areaminima', areaminima.toString());
+    }
+    if (areamaxima !== undefined) {
+      params = params.set('areamaxima', areamaxima.toString());
     }
 
     return this.http.get<RespostaPaginada>(
