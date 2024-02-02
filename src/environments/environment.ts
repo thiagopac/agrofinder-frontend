@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   appVersion: 'v1.0.0',
-  hostUrl: 'http://localhost:4200',
-  apiUrl: 'http://localhost:3333/api',
+  hostUrl: 'http://localhost:4100',
+  apiUrl: 'http://localhost:2222/api',
 };
 
 /*
